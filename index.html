@@ -7,6 +7,9 @@ body.dark{--bg:#202124;--s:#292a2d;--s2:#35363a;--t:#f1f3f4;--m:#bdc1c6;--b:#4a4
 body.dark input,body.dark select{background:#202124;color:#f1f3f4;border-color:#4a4b50}
 body.dark .calcell{background:#292a2d}
 .dark-toggle{min-width:110px}
+
+.gpill{display:block;margin-top:4px;padding:4px 6px;border-radius:7px;background:var(--as);color:var(--a);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:700px){.gpill{font-size:10px}.cal{min-width:620px}}
 </style><script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://apis.google.com/js/api.js" async defer></script></head><body><main class="app">
 <header class="head"><div class="brand"><div class="logo">F</div><div><h1>Focus</h1><div class="muted" id="date"></div></div></div><button class="btn dark-toggle" id="darkToggle">🌙 Dark mode</button><nav class="nav"><button class="btn active" data-p="timer">Timer</button><button class="btn" data-p="calendar">Calendar</button><button class="btn" data-p="stats">Stats</button><button class="btn" data-p="settings">Settings</button></nav></header>
@@ -14,7 +17,10 @@ body.dark .calcell{background:#292a2d}
 <section id="timer" class="page on"><div class="grid"><div class="card timer"><div class="mode" id="mode">Focus</div><div class="time" id="time">25:00</div><div class="progress"><div class="bar" id="tb"></div></div><div class="muted" id="sess">Session 1 of 4</div><div class="dots" id="dots"></div><div class="actions"><button class="btn primary" id="start">Start</button><button class="btn" id="reset">Reset</button><button class="btn" id="skip">Skip</button></div><div class="task"><input id="task" placeholder="What are you working on?"><button class="btn" id="saveTask">Save</button></div></div>
 <div class="card"><div class="title">Today</div><div class="stats"><div class="stat"><div class="num" id="ts">0</div><div class="muted">sessions</div></div><div class="stat"><div class="num" id="tm">0</div><div class="muted">focus min</div></div><div class="stat"><div class="num" id="st">0</div><div class="muted">day streak</div></div></div><div style="margin-top:20px" class="title">Daily goal</div><div class="muted"><b id="gd">0</b> / <b id="goal">8</b> sessions</div><div class="progress" style="margin-top:7px"><div class="bar" id="gb"></div></div><div style="margin-top:20px" class="title">Recent consistency</div><div class="heat" id="heat"></div></div></div><div class="card" style="margin-top:15px"><div class="title">Current task</div><div class="muted" id="ct">No task selected.</div></div></section>
 
-<section id="calendar" class="page"><div class="card"><div class="calhead"><button class="btn" id="prev">‹</button><b id="month"></b><button class="btn" id="next">›</button></div><div class="calwrap"><div class="cal" id="cal"></div></div></div></section>
+<section id="calendar" class="page"><div class="card"><div class="calhead"><button class="btn" id="prev">‹</button><b id="month"></b><button class="btn" id="next">›</button></div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><button class="btn" id="refreshGoogleCal">↻ Refresh Google Calendar</button><span class="muted" id="calendarStatus">Pomodoro sessions are shown automatically.</span></div>
+<div class="muted" style="margin-bottom:10px">🍅 Pomodoro sessions &nbsp; • &nbsp; 📅 Google Calendar events</div>
+<div class="calwrap"><div class="cal" id="cal"></div></div></div></section>
 
 <section id="stats" class="page"><div class="grid"><div class="card"><div class="title">Focus this week</div><div class="chart" id="chart"></div><div class="muted" id="wt"></div></div><div class="card"><div class="title">Your numbers</div><div class="stats"><div class="stat"><div class="num" id="all">0</div><div class="muted">sessions</div></div><div class="stat"><div class="num" id="hrs">0</div><div class="muted">focus hours</div></div><div class="stat"><div class="num" id="best">0</div><div class="muted">best streak</div></div></div><p class="muted" id="cons"></p></div></div><div class="card" style="margin-top:15px"><div class="title">Recent sessions</div><div class="history" id="history"></div></div></section>
 
@@ -35,7 +41,7 @@ body.dark .calcell{background:#292a2d}
 <div style="margin-top:20px" class="title">Data</div><button class="btn" id="export">Export history</button> <button class="btn" id="clear">Clear data</button></div></section>
 </main>
 <script>
-(()=>{const $=id=>document.getElementById(id),C=['#1a73e8','#188038','#9334e6','#d93025','#e37400','#00897b','#c2185b','#5f6368'];let s=JSON.parse(localStorage.getItem('focusV3')||'null')||{focus:25,short:5,long:15,goal:8,a:'#1a73e8',theme:'system',mode:'focus',rem:1500,run:false,round:1,task:'',r:[],sound:true,dark:false,googleClientId:''},timer=null,month=new Date();month.setDate(1);
+(()=>{const $=id=>document.getElementById(id),C=['#1a73e8','#188038','#9334e6','#d93025','#e37400','#00897b','#c2185b','#5f6368'];let s=JSON.parse(localStorage.getItem('focusV3')||'null')||{focus:25,short:5,long:15,goal:8,a:'#1a73e8',theme:'system',mode:'focus',rem:1500,run:false,round:1,task:'',r:[],sound:true,dark:false,googleClientId:'',googleConnected:false,googleEvents:[]},timer=null,month=new Date();month.setDate(1);
 const key=d=>{d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},today=()=>key(new Date()),rs=k=>s.r.filter(x=>x.date===k),save=()=>localStorage.setItem('focusV3',JSON.stringify(s));
 function streak(){let n=0,d=new Date();while(rs(key(d)).length){n++;d.setDate(d.getDate()-1)}return n}function best(){let z=[...new Set(s.r.map(x=>x.date))].sort(),b=0,n=0,p;z.forEach(x=>{let d=new Date(x+'T12:00');if(p&&(d-p)/864e5===1)n++;else n=1;b=Math.max(b,n);p=d});return b}
 function theme(){
@@ -53,13 +59,54 @@ function initGoogle(){
   googleTokenClient=google.accounts.oauth2.initTokenClient({
     client_id:s.googleClientId,
     scope:GOOGLE_SCOPE,
-    callback:(resp)=>{
+    callback:async(resp)=>{
       if(resp.error){googleStatus('Google connection was not completed.');return}
       googleStatus('Connected to Google Calendar.');
       s.googleConnected=true;save();
+      try{gapi.client.setToken(resp); await loadGapi(); await fetchGoogleEvents()}catch(e){}
     }
   });
   googleReady=true;
+}
+
+async function fetchGoogleEvents(){
+  if(!window.gapi?.client?.calendar)return;
+  try{
+    const start=new Date(month.getFullYear(),month.getMonth(),1);
+    const end=new Date(month.getFullYear(),month.getMonth()+1,1);
+    const res=await gapi.client.calendar.events.list({
+      calendarId:'primary',
+      timeMin:start.toISOString(),
+      timeMax:end.toISOString(),
+      singleEvents:true,
+      orderBy:'startTime',
+      maxResults:250
+    });
+    s.googleEvents=(res.result.items||[]).map(x=>({
+      id:x.id,
+      title:x.summary||'(No title)',
+      start:x.start?.dateTime||x.start?.date,
+      end:x.end?.dateTime||x.end?.date,
+      allDay:!!x.start?.date
+    }));
+    save(); calendar();
+    googleStatus('Google Calendar connected. Your events are shown in the Calendar tab.');
+    const cs=$('calendarStatus'); if(cs)cs.textContent=`Showing ${s.googleEvents.length} Google Calendar event${s.googleEvents.length===1?'':'s'} this month.`;
+  }catch(e){
+    const cs=$('calendarStatus'); if(cs)cs.textContent='Could not load Google Calendar events. Try Refresh.';
+  }
+}
+function requestGoogleCalendarView(){
+  if(!googleReady||!s.googleClientId){connectGoogle();return}
+  googleTokenClient.callback=async(resp)=>{
+    if(resp.error)return;
+    try{
+      gapi.client.setToken(resp);
+      s.googleConnected=true;save();
+      await fetchGoogleEvents();
+    }catch(e){}
+  };
+  googleTokenClient.requestAccessToken({prompt:''});
 }
 function connectGoogle(){
   if(!s.googleClientId){
@@ -96,7 +143,7 @@ async function syncGoogle(){
         const created=await gapi.client.calendar.events.insert({calendarId:'primary',resource:event});
         x.googleEventId=created.result.id; count++;
       }
-      save(); googleStatus(count?`Synced ${count} new completed session${count===1?'':'s'} to Google Calendar.`:'Everything is already synced to Google Calendar.');
+      save(); fetchGoogleEvents().catch(()=>{}); googleStatus(count?`Synced ${count} new completed session${count===1?'':'s'} to Google Calendar.`:'Everything is already synced to Google Calendar.');
     }catch(e){googleStatus('Google Calendar sync failed. Check your Client ID and permissions.')}
   };
   googleTokenClient.requestAccessToken({prompt:''});
@@ -143,8 +190,31 @@ function tick(){if(!s.run)return;s.rem--;if(s.rem<=0)nextMode();else render()}
 $('start').onclick=()=>{s.run=!s.run;clearInterval(timer);if(s.run)timer=setInterval(tick,1000);save();render()};$('reset').onclick=()=>{s.run=false;clearInterval(timer);s.rem=(s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long)*60;save();render()};$('skip').onclick=nextMode;$('saveTask').onclick=()=>{s.task=$('task').value.trim();save();render()};
 document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-p]').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));$(b.dataset.p).classList.add('on');render()});
 ['focus','short','long'].forEach(id=>$(id).onchange=e=>{s[id]=+e.target.value;if(s.mode===id)s.rem=s[id]*60;save();render()});$('goalset').onchange=e=>{s.goal=+e.target.value;save();render()};
-function calendar(){let y=month.getFullYear(),m=month.getMonth(),g=$('cal');$('month').textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});g.innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="dow">${x}</div>`).join('');let d=new Date(y,m,1);d.setDate(1-d.getDay());for(let i=0;i<42;i++){let k=key(d),a=rs(k),e=document.createElement('div');e.className='day '+(d.getMonth()!=m?'other ':'')+(k===today()?'today':'');e.innerHTML=`<b>${d.getDate()}</b>${a.length?`<span class="pill">${a.length} focus · ${a.reduce((x,y)=>x+y.min,0)}m</span>`:''}`;g.appendChild(e);d.setDate(d.getDate()+1)}}
-$('prev').onclick=()=>{month.setMonth(month.getMonth()-1);calendar()};$('next').onclick=()=>{month.setMonth(month.getMonth()+1);calendar()};
+function calendar(){
+  let y=month.getFullYear(),m=month.getMonth(),g=$('cal');
+  $('month').textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  g.innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="dow">${x}</div>`).join('');
+  const events=s.googleEvents||[];
+  let d=new Date(y,m,1); d.setDate(1-d.getDay());
+  for(let i=0;i<42;i++){
+    let k=key(d),a=rs(k),e=document.createElement('div');
+    e.className='day '+(d.getMonth()!=m?'other ':'')+(k===today()?'today':'');
+    const ge=events.filter(x=>key(x.start)===k);
+    let bits=`<b>${d.getDate()}</b>`;
+    if(a.length)bits+=`<span class="pill">🍅 ${a.length} focus · ${a.reduce((x,y)=>x+y.min,0)}m</span>`;
+    ge.slice(0,4).forEach(x=>{
+      const tm=x.allDay?'All day':new Date(x.start).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+      bits+=`<span class="gpill" title="${esc(x.title)}">📅 ${tm} · ${esc(x.title)}</span>`;
+    });
+    if(ge.length>4)bits+=`<span class="muted" style="display:block;margin-top:4px">+${ge.length-4} more</span>`;
+    e.innerHTML=bits; g.appendChild(e); d.setDate(d.getDate()+1);
+  }
+  const cs=$('calendarStatus');
+  if(cs && !s.googleConnected)cs.textContent='Connect Google Calendar in Settings to show your schedule here.';
+}
+$('prev').onclick=()=>{month.setMonth(month.getMonth()-1);calendar();if(s.googleConnected)requestGoogleCalendarView()};
+$('next').onclick=()=>{month.setMonth(month.getMonth()+1);calendar();if(s.googleConnected)requestGoogleCalendarView()};
+$('refreshGoogleCal').onclick=()=>requestGoogleCalendarView();
 function stats(){let d=new Date();d.setDate(d.getDate()-6);let w=[],tot=0;for(let i=0;i<7;i++){let n=rs(key(d)).reduce((a,b)=>a+b.min,0);w.push(n);tot+=n;d.setDate(d.getDate()+1)}let mx=Math.max(1,...w);$('chart').innerHTML=w.map((n,i)=>`<div class="col"><div class="barc" style="height:${Math.max(2,n/mx*130)}px"></div><div class="muted">${['S','M','T','W','T','F','S'][new Date(Date.now()-(6-i)*864e5).getDay()]}</div></div>`).join('');$('wt').textContent='This week: '+tot+' focus minutes';$('all').textContent=s.r.length;$('hrs').textContent=(s.r.reduce((a,b)=>a+b.min,0)/60).toFixed(1);$('best').textContent=best();$('cons').textContent=s.r.length?`${new Set(s.r.map(x=>x.date)).size} active days recorded. Build consistency rather than chasing perfect days.`:'Complete your first session to begin your history.';let h=$('history'),a=[...s.r].reverse().slice(0,12);h.innerHTML=a.length?a.map(x=>`<div class="item"><div><b>${esc(x.task)}</b><div class="muted">${new Date(x.time).toLocaleString()}</div></div><span class="pill">${x.min} min</span></div>`).join(''):'<div class="empty">No sessions yet.</div>'}
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
