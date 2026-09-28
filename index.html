@@ -1,0 +1,171 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1a73e8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Focus"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>Focus — Pomodoro</title>
+<style>
+:root{--a:#1a73e8;--as:#e8f0fe;--bg:#f8fafd;--s:#fff;--s2:#f1f3f4;--t:#202124;--m:#5f6368;--b:#dadce0}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:1120px;margin:auto;padding:18px}.head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}.brand{display:flex;gap:10px;align-items:center}.logo{width:40px;height:40px;border-radius:12px;background:var(--a);color:white;display:grid;place-items:center;font-weight:700;font-size:18px}h1{font-size:21px;margin:0}.muted{color:var(--m);font-size:12px}.nav{display:flex;gap:5px;flex-wrap:wrap}.btn{border:1px solid var(--b);background:var(--s);color:var(--t);border-radius:11px;padding:9px 13px;min-height:42px;cursor:pointer}.btn.active{background:var(--as);color:var(--a);border-color:var(--a);font-weight:650}.primary{background:var(--a);color:#fff;border-color:var(--a);font-weight:650}.page{display:none}.page.on{display:block}.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:15px}.card{background:var(--s);border:1px solid var(--b);border-radius:18px;padding:20px}.timer{text-align:center;padding:30px}.mode{color:var(--m);font-size:13px}.time{font-size:76px;font-weight:650;letter-spacing:-4px;margin:10px 0 15px;font-variant-numeric:tabular-nums}.progress{height:7px;background:var(--s2);border-radius:99px;overflow:hidden}.bar{height:100%;background:var(--a);width:0%;transition:.2s}.actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:18px 0}.task{display:flex;gap:7px}.task input,.select{width:100%;padding:11px;border:1px solid var(--b);border-radius:11px;background:var(--s);color:var(--t)}.dots{display:flex;justify-content:center;gap:7px;margin:14px}.dot{width:9px;height:9px;border-radius:50%;background:var(--b)}.dot.done{background:var(--a)}.dot.cur{outline:3px solid var(--as)}.title{font-weight:680;margin-bottom:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:var(--s2);border-radius:13px;padding:13px;text-align:center}.num{font-size:24px;font-weight:680}.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.cell{aspect-ratio:1;border-radius:6px;background:var(--s2);display:grid;place-items:center;font-size:10px;color:var(--m)}.l1{background:color-mix(in srgb,var(--a) 25%,white)}.l2{background:color-mix(in srgb,var(--a) 50%,white)}.l3{background:var(--a);color:white}.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.calwrap{overflow:auto}.cal{min-width:650px;display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid var(--b);border-left:1px solid var(--b)}.cal>div{border-right:1px solid var(--b);border-bottom:1px solid var(--b)}.dow{text-align:center;padding:8px;color:var(--m);font-size:11px}.day{min-height:88px;padding:7px}.other{background:var(--s2);color:var(--m)}.today{box-shadow:inset 0 0 0 2px var(--a)}.pill{display:block;margin-top:5px;padding:4px;border-radius:7px;background:var(--as);color:var(--a);font-size:10px}.chart{height:170px;display:flex;align-items:flex-end;gap:8px}.col{flex:1;text-align:center}.barc{width:70%;max-width:30px;margin:auto;background:var(--a);border-radius:6px 6px 2px 2px;min-height:2px}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.swatches{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}.sw{width:34px;height:34px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px var(--b);cursor:pointer}.history{display:grid;gap:8px}.item{border:1px solid var(--b);border-radius:12px;padding:11px;display:flex;justify-content:space-between;gap:8px}.empty{text-align:center;padding:28px;color:var(--m)}@media(max-width:780px){.grid{grid-template-columns:1fr}.head{align-items:flex-start}.nav{width:100%}.nav .btn{flex:1}.time{font-size:62px}.formgrid{grid-template-columns:1fr}}
+body.dark{--bg:#202124;--s:#292a2d;--s2:#303134;--t:#f1f3f4;--m:#bdc1c6;--b:#4a4b4f}
+
+body.dark{--bg:#202124;--s:#292a2d;--s2:#35363a;--t:#f1f3f4;--m:#bdc1c6;--b:#4a4b50}
+body.dark input,body.dark select{background:#202124;color:#f1f3f4;border-color:#4a4b50}
+body.dark .calcell{background:#292a2d}
+.dark-toggle{min-width:110px}
+</style><script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script></head><body><main class="app">
+<header class="head"><div class="brand"><div class="logo">F</div><div><h1>Focus</h1><div class="muted" id="date"></div></div></div><nav class="nav"><button class="btn active" data-p="timer">Timer</button><button class="btn" data-p="calendar">Calendar</button><button class="btn" data-p="stats">Stats</button><button class="btn" data-p="settings">Settings</button></nav></header>
+
+<section id="timer" class="page on"><div class="grid"><div class="card timer"><div class="mode" id="mode">Focus</div><div class="time" id="time">25:00</div><div class="progress"><div class="bar" id="tb"></div></div><div class="muted" id="sess">Session 1 of 4</div><div class="dots" id="dots"></div><div class="actions"><button class="btn primary" id="start">Start</button><button class="btn" id="reset">Reset</button><button class="btn" id="skip">Skip</button></div><div class="task"><input id="task" placeholder="What are you working on?"><button class="btn" id="saveTask">Save</button></div></div>
+<div class="card"><div class="title">Today</div><div class="stats"><div class="stat"><div class="num" id="ts">0</div><div class="muted">sessions</div></div><div class="stat"><div class="num" id="tm">0</div><div class="muted">focus min</div></div><div class="stat"><div class="num" id="st">0</div><div class="muted">day streak</div></div></div><div style="margin-top:20px" class="title">Daily goal</div><div class="muted"><b id="gd">0</b> / <b id="goal">8</b> sessions</div><div class="progress" style="margin-top:7px"><div class="bar" id="gb"></div></div><div style="margin-top:20px" class="title">Recent consistency</div><div class="heat" id="heat"></div></div></div><div class="card" style="margin-top:15px"><div class="title">Current task</div><div class="muted" id="ct">No task selected.</div></div></section>
+
+<section id="calendar" class="page"><div class="card"><div class="calhead"><button class="btn" id="prev">‹</button><b id="month"></b><button class="btn" id="next">›</button></div><div class="calwrap"><div class="cal" id="cal"></div></div></div></section>
+
+<section id="stats" class="page"><div class="grid"><div class="card"><div class="title">Focus this week</div><div class="chart" id="chart"></div><div class="muted" id="wt"></div></div><div class="card"><div class="title">Your numbers</div><div class="stats"><div class="stat"><div class="num" id="all">0</div><div class="muted">sessions</div></div><div class="stat"><div class="num" id="hrs">0</div><div class="muted">focus hours</div></div><div class="stat"><div class="num" id="best">0</div><div class="muted">best streak</div></div></div><p class="muted" id="cons"></p></div></div><div class="card" style="margin-top:15px"><div class="title">Recent sessions</div><div class="history" id="history"></div></div></section>
+
+<section id="settings" class="page"><div class="card"><div class="title">Timer & goals</div><div class="formgrid"><label class="muted">Focus<select class="select" id="focus"><option>25</option><option>30</option><option>45</option><option>50</option><option>60</option></select></label><label class="muted">Short break<select class="select" id="short"><option>5</option><option>10</option><option>15</option></select></label><label class="muted">Long break<select class="select" id="long"><option>15</option><option>20</option><option>30</option></select></label><label class="muted">Daily goal<select class="select" id="goalset"><option>4</option><option>6</option><option>8</option><option>10</option><option>12</option></select></label></div><div style="margin-top:20px" class="title">Accent colour</div><div class="swatches" id="swatches"></div><div style="margin-top:16px;display:flex;gap:7px;flex-wrap:wrap"><button class="btn" id="light">Light</button><button class="btn" id="dark">Dark</button><button class="btn" id="system">System</button></div><div style="margin-top:20px" class="title">Alarms & notifications</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<button class="btn" id="soundToggle">🔔 Sound: On</button>
+<button class="btn" id="testSound">Test sound</button>
+<button class="btn" id="notifyBtn">Enable notifications</button>
+</div>
+<div class="muted" style="margin-top:8px">Sound works while the app is open. Browser notifications require permission and may depend on device/browser settings.</div>
+<div style="margin-top:18px" class="title">Google Calendar</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<button class="btn" id="googleConnect">Connect Google Calendar</button>
+<button class="btn" id="googleSync">Sync completed sessions</button>
+</div>
+<div id="googleStatus" class="muted" style="margin-top:8px">Not connected. Google Calendar sync requires a Google OAuth client ID.</div>
+
+<div style="margin-top:20px" class="title">Data</div><button class="btn" id="export">Export history</button> <button class="btn" id="clear">Clear data</button></div></section>
+</main>
+<script>
+(()=>{const $=id=>document.getElementById(id),C=['#1a73e8','#188038','#9334e6','#d93025','#e37400','#00897b','#c2185b','#5f6368'];let s=JSON.parse(localStorage.getItem('focusV3')||'null')||{focus:25,short:5,long:15,goal:8,a:'#1a73e8',theme:'system',mode:'focus',rem:1500,run:false,round:1,task:'',r:[],sound:true,dark:false,googleClientId:''},timer=null,month=new Date();month.setDate(1);
+const key=d=>{d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},today=()=>key(new Date()),rs=k=>s.r.filter(x=>x.date===k),save=()=>localStorage.setItem('focusV3',JSON.stringify(s));
+function streak(){let n=0,d=new Date();while(rs(key(d)).length){n++;d.setDate(d.getDate()-1)}return n}function best(){let z=[...new Set(s.r.map(x=>x.date))].sort(),b=0,n=0,p;z.forEach(x=>{let d=new Date(x+'T12:00');if(p&&(d-p)/864e5===1)n++;else n=1;b=Math.max(b,n);p=d});return b}
+function theme(){
+  document.body.classList.toggle('dark',!!s.dark);
+  document.documentElement.style.setProperty('--a',s.a);
+  document.documentElement.style.setProperty('--as',s.a+'22');
+}
+
+const GOOGLE_DISCOVERY='https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+const GOOGLE_SCOPE='https://www.googleapis.com/auth/calendar.events';
+let googleTokenClient=null, googleReady=false;
+function googleStatus(msg){const e=$('googleStatus');if(e)e.textContent=msg}
+function initGoogle(){
+  if(!window.google?.accounts?.oauth2)return;
+  googleTokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:s.googleClientId,
+    scope:GOOGLE_SCOPE,
+    callback:(resp)=>{
+      if(resp.error){googleStatus('Google connection was not completed.');return}
+      googleStatus('Connected to Google Calendar.');
+      s.googleConnected=true;save();
+    }
+  });
+  googleReady=true;
+}
+function connectGoogle(){
+  if(!s.googleClientId){
+    const id=prompt('Paste your Google OAuth Web application Client ID:');
+    if(id){s.googleClientId=id.trim();save();initGoogle()}
+  }
+  if(!googleReady){googleStatus('Google services are still loading. Try again in a moment.');return}
+  googleTokenClient.requestAccessToken({prompt:'consent'});
+}
+async function loadGapi(){
+  if(!window.gapi)return;
+  await new Promise(r=>gapi.load('client',r));
+  await gapi.client.init({discoveryDocs:[GOOGLE_DISCOVERY]});
+}
+async function syncGoogle(){
+  if(!googleReady||!s.googleClientId){connectGoogle();return}
+  googleTokenClient.callback=async (resp)=>{
+    if(resp.error){googleStatus('Google connection was not completed.');return}
+    try{
+      gapi.client.setToken(resp);
+      const sessions=s.r||[];
+      let count=0;
+      for(const x of sessions){
+        if(x.googleEventId)continue;
+        const start=new Date(x.ts||x.time||x.date);
+        if(isNaN(start))continue;
+        const end=new Date(start.getTime()+(Number(x.min)||s.focus)*60000);
+        const event={
+          summary:'🍅 '+(x.task||'Pomodoro Focus'),
+          description:'Completed Pomodoro session from Focus.',
+          start:{dateTime:start.toISOString()},
+          end:{dateTime:end.toISOString()}
+        };
+        const created=await gapi.client.calendar.events.insert({calendarId:'primary',resource:event});
+        x.googleEventId=created.result.id; count++;
+      }
+      save(); googleStatus(count?`Synced ${count} new completed session${count===1?'':'s'} to Google Calendar.`:'Everything is already synced to Google Calendar.');
+    }catch(e){googleStatus('Google Calendar sync failed. Check your Client ID and permissions.')}
+  };
+  googleTokenClient.requestAccessToken({prompt:''});
+}
+function render(){theme();updateAlarmUI();$('date').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});let t=rs(today()),m=t.reduce((a,b)=>a+b.min,0);$('ts').textContent=t.length;$('tm').textContent=m;$('st').textContent=streak();$('gd').textContent=t.length;$('goal').textContent=s.goal;$('gb').style.width=Math.min(100,t.length/s.goal*100)+'%';$('ct').textContent=s.task||'No task selected.';$('task').value=s.task;let max=s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long,tot=max*60;$('time').textContent=String(Math.floor(s.rem/60)).padStart(2,'0')+':'+String(s.rem%60).padStart(2,'0');$('mode').textContent=s.mode==='focus'?'Focus':s.mode==='short'?'Short break':'Long break';$('sess').textContent=s.mode==='focus'?`Session ${s.round} of 4`:'Recharge before the next focus session';$('start').textContent=s.run?'Pause':'Start';$('tb').style.width=(100*(1-s.rem/tot))+'%';$('dots').innerHTML=[1,2,3,4].map(i=>`<i class="dot ${i<s.round?'done':''} ${i===s.round?'cur':''}"></i>`).join('');heat();calendar();stats();['focus','short','long'].forEach(id=>$(id).value=s[id]);$('goalset').value=s.goal}
+function heat(){let h=$('heat');h.innerHTML='';let d=new Date();d.setDate(d.getDate()-27);for(let i=0;i<28;i++){let n=rs(key(d)).length,e=document.createElement('div');e.className='cell '+(n>=4?'l3':n>=2?'l2':n?'l1':'');e.textContent=n||'';e.title=key(d)+': '+n;h.appendChild(e);d.setDate(d.getDate()+1)}}
+
+let audioCtx=null;
+function tone(type='focus'){
+  if(!s.sound)return;
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    const patterns=type==='long'?[880,660,880,660,1046]:type==='short'?[660,880,660]:[880,1046,1318];
+    patterns.forEach((freq,i)=>{
+      const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+      o.type='sine';o.frequency.value=freq;
+      o.connect(g);g.connect(audioCtx.destination);
+      const t=audioCtx.currentTime+i*.22;
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.22,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+.18);
+      o.start(t);o.stop(t+.2);
+    });
+  }catch(e){}
+}
+function notify(title,body){
+  if('Notification' in window && Notification.permission==='granted'){
+    try{new Notification(title,{body,icon:'icons/icon-192.png',tag:'focus-cycle'})}catch(e){}
+  }
+}
+function cycleAlarm(finished){
+  tone(finished);
+  const titles={focus:['Focus complete','Time for a break.'],short:['Break complete','Ready for your next focus session.'],long:['Long break complete','Ready to get back to work.']};
+  const x=titles[finished]||titles.focus;
+  notify(x[0],x[1]);
+}
+function finish(){const now=new Date().toISOString();s.r.push({date:today(),time:now,ts:now,min:s.focus,task:s.task||'Focus session',googleEventId:null});save()}
+function nextMode(){
+  const finished=s.mode;
+  if(s.mode==='focus'){finish();if(s.round===4){s.mode='long';s.rem=s.long*60;s.round=1}else{s.mode='short';s.rem=s.short*60}}
+  else{s.mode='focus';s.rem=s.focus*60}
+  s.run=false;clearInterval(timer);save();cycleAlarm(finished);render()
+}
+function tick(){if(!s.run)return;s.rem--;if(s.rem<=0)nextMode();else render()}
+$('start').onclick=()=>{s.run=!s.run;clearInterval(timer);if(s.run)timer=setInterval(tick,1000);save();render()};$('reset').onclick=()=>{s.run=false;clearInterval(timer);s.rem=(s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long)*60;save();render()};$('skip').onclick=nextMode;$('saveTask').onclick=()=>{s.task=$('task').value.trim();save();render()};
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-p]').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));$(b.dataset.p).classList.add('on');render()});
+['focus','short','long'].forEach(id=>$(id).onchange=e=>{s[id]=+e.target.value;if(s.mode===id)s.rem=s[id]*60;save();render()});$('goalset').onchange=e=>{s.goal=+e.target.value;save();render()};
+function calendar(){let y=month.getFullYear(),m=month.getMonth(),g=$('cal');$('month').textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});g.innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="dow">${x}</div>`).join('');let d=new Date(y,m,1);d.setDate(1-d.getDay());for(let i=0;i<42;i++){let k=key(d),a=rs(k),e=document.createElement('div');e.className='day '+(d.getMonth()!=m?'other ':'')+(k===today()?'today':'');e.innerHTML=`<b>${d.getDate()}</b>${a.length?`<span class="pill">${a.length} focus · ${a.reduce((x,y)=>x+y.min,0)}m</span>`:''}`;g.appendChild(e);d.setDate(d.getDate()+1)}}
+$('prev').onclick=()=>{month.setMonth(month.getMonth()-1);calendar()};$('next').onclick=()=>{month.setMonth(month.getMonth()+1);calendar()};
+function stats(){let d=new Date();d.setDate(d.getDate()-6);let w=[],tot=0;for(let i=0;i<7;i++){let n=rs(key(d)).reduce((a,b)=>a+b.min,0);w.push(n);tot+=n;d.setDate(d.getDate()+1)}let mx=Math.max(1,...w);$('chart').innerHTML=w.map((n,i)=>`<div class="col"><div class="barc" style="height:${Math.max(2,n/mx*130)}px"></div><div class="muted">${['S','M','T','W','T','F','S'][new Date(Date.now()-(6-i)*864e5).getDay()]}</div></div>`).join('');$('wt').textContent='This week: '+tot+' focus minutes';$('all').textContent=s.r.length;$('hrs').textContent=(s.r.reduce((a,b)=>a+b.min,0)/60).toFixed(1);$('best').textContent=best();$('cons').textContent=s.r.length?`${new Set(s.r.map(x=>x.date)).size} active days recorded. Build consistency rather than chasing perfect days.`:'Complete your first session to begin your history.';let h=$('history'),a=[...s.r].reverse().slice(0,12);h.innerHTML=a.length?a.map(x=>`<div class="item"><div><b>${esc(x.task)}</b><div class="muted">${new Date(x.time).toLocaleString()}</div></div><span class="pill">${x.min} min</span></div>`).join(''):'<div class="empty">No sessions yet.</div>'}
+function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+
+$('darkToggle').onclick=()=>{s.dark=!s.dark;save();theme();$('darkToggle').textContent=s.dark?'☀️ Light mode':'🌙 Dark mode'};
+$('googleConnect').onclick=connectGoogle;
+$('googleSync').onclick=syncGoogle;
+setTimeout(()=>{initGoogle();loadGapi().catch(()=>{})},700);
+$('soundToggle').onclick=()=>{s.sound=!s.sound;save();render();updateAlarmUI()};
+$('testSound').onclick=()=>tone('focus');
+$('notifyBtn').onclick=async()=>{
+  if(!('Notification'in window)){alert('Notifications are not supported by this browser.');return}
+  try{const p=await Notification.requestPermission();$('notifyBtn').textContent=p==='granted'?'Notifications enabled':p==='denied'?'Notifications blocked':'Enable notifications'}catch(e){}
+};
+function updateAlarmUI(){
+  const d=$('darkToggle'); if(d)d.textContent=s.dark?'☀️ Light mode':'🌙 Dark mode';
+  if($('googleStatus')) $('googleStatus').textContent=s.googleConnected?'Connected to Google Calendar.':'Not connected. Google Calendar sync requires a Google OAuth client ID.';
+  $('soundToggle').textContent=s.sound?'🔔 Sound: On':'🔕 Sound: Off';
+  if('Notification'in window){
+    $('notifyBtn').textContent=Notification.permission==='granted'?'Notifications enabled':'Enable notifications';
+  }else $('notifyBtn').textContent='Notifications unavailable';
+}
+C.forEach(c=>{let b=document.createElement('button');b.className='sw';b.style.background=c;b.onclick=()=>{s.a=c;save();render()};$('swatches').appendChild(b)});$('light').onclick=()=>{s.theme='light';save();render()};$('dark').onclick=()=>{s.theme='dark';save();render()};$('system').onclick=()=>{s.theme='system';save();render()};$('export').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(s.r,null,2)],{type:'application/json'}));a.download='focus-history.json';a.click()};$('clear').onclick=()=>{if(confirm('Clear all Focus data?')){localStorage.removeItem('focusV3');location.reload()}};if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});render()})();
+</script></body></html>
