@@ -1,6 +1,6 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1a73e8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Focus"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>Pompoms — Pomodoro</title>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1a73e8"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Pompoms"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/icon-192.png"><title>Pompoms — Pomodoro</title>
 <style>
-:root{--a:#1a73e8;--as:#e8f0fe;--bg:#f8fafd;--s:#fff;--s2:#f1f3f4;--t:#202124;--m:#5f6368;--b:#dadce0}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:1120px;margin:auto;padding:18px}.head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}.brand{display:flex;gap:10px;align-items:center}.logo{width:40px;height:40px;border-radius:12px;background:var(--a);color:white;display:grid;place-items:center;font-weight:700;font-size:18px}h1{font-size:21px;margin:0}.muted{color:var(--m);font-size:12px}.nav{display:flex;gap:5px;flex-wrap:wrap}.btn{border:1px solid var(--b);background:var(--s);color:var(--t);border-radius:11px;padding:9px 13px;min-height:42px;cursor:pointer}.btn.active{background:var(--as);color:var(--a);border-color:var(--a);font-weight:650}.primary{background:var(--a);color:#fff;border-color:var(--a);font-weight:650}.page{display:none}.page.on{display:block}.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:15px}.card{background:var(--s);border:1px solid var(--b);border-radius:18px;padding:20px}.timer{text-align:center;padding:30px}.mode{color:var(--m);font-size:13px}.time{font-size:76px;font-weight:650;letter-spacing:-4px;margin:10px 0 15px;font-variant-numeric:tabular-nums}.progress{height:7px;background:var(--s2);border-radius:99px;overflow:hidden}.bar{height:100%;background:var(--a);width:0%;transition:.2s}.actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:18px 0}.task{display:flex;gap:7px}.task input,.select{width:100%;padding:11px;border:1px solid var(--b);border-radius:11px;background:var(--s);color:var(--t)}.dots{display:flex;justify-content:center;gap:7px;margin:14px}.dot{width:9px;height:9px;border-radius:50%;background:var(--b)}.dot.done{background:var(--a)}.dot.cur{outline:3px solid var(--as)}.title{font-weight:680;margin-bottom:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:var(--s2);border-radius:13px;padding:13px;text-align:center}.num{font-size:24px;font-weight:680}.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.cell{aspect-ratio:1;border-radius:6px;background:var(--s2);display:grid;place-items:center;font-size:10px;color:var(--m)}.l1{background:color-mix(in srgb,var(--a) 25%,white)}.l2{background:color-mix(in srgb,var(--a) 50%,white)}.l3{background:var(--a);color:white}.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.calwrap{overflow:auto}.cal{min-width:650px;display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid var(--b);border-left:1px solid var(--b)}.cal>div{border-right:1px solid var(--b);border-bottom:1px solid var(--b)}.dow{text-align:center;padding:8px;color:var(--m);font-size:11px}.day{min-height:88px;padding:7px}.other{background:var(--s2);color:var(--m)}.today{box-shadow:inset 0 0 0 2px var(--a)}.pill{display:block;margin-top:5px;padding:4px;border-radius:7px;background:var(--as);color:var(--a);font-size:10px}.chart{height:170px;display:flex;align-items:flex-end;gap:8px}.col{flex:1;text-align:center}.barc{width:70%;max-width:30px;margin:auto;background:var(--a);border-radius:6px 6px 2px 2px;min-height:2px}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.swatches{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}.sw{width:34px;height:34px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px var(--b);cursor:pointer}.history{display:grid;gap:8px}.item{border:1px solid var(--b);border-radius:12px;padding:11px;display:flex;justify-content:space-between;gap:8px}.empty{text-align:center;padding:28px;color:var(--m)}@media(max-width:780px){.grid{grid-template-columns:1fr}.head{align-items:flex-start}.nav{width:100%}.nav .btn{flex:1}.time{font-size:62px}.formgrid{grid-template-columns:1fr}}
+:root{--a:#1a73e8;--as:#e8f0fe;--bg:#f8fafd;--s:#fff;--s2:#f1f3f4;--t:#202124;--m:#5f6368;--b:#dadce0}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:1120px;margin:auto;padding:18px}.head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}.brand{display:flex;gap:10px;align-items:center}.logo{width:40px;height:40px;border-radius:12px;background:var(--a);color:white;display:grid;place-items:center;font-weight:700;font-size:18px}h1{font-size:21px;margin:0}.muted{color:var(--m);font-size:12px}.nav{display:flex;gap:5px;flex-wrap:wrap}.btn{border:1px solid var(--b);background:var(--s);color:var(--t);border-radius:11px;padding:9px 13px;min-height:42px;cursor:pointer}.btn.active{background:var(--as);color:var(--a);border-color:var(--a);font-weight:650}.primary{background:var(--a);color:#fff;border-color:var(--a);font-weight:650}.page{display:none}.page.on{display:block}.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:15px}.card{background:var(--s);border:1px solid var(--b);border-radius:18px;padding:20px}.timer{text-align:center;padding:30px}.mode{color:var(--m);font-size:13px}.time{font-size:76px;font-weight:650;letter-spacing:-4px;margin:10px 0 15px;font-variant-numeric:tabular-nums}.progress{height:7px;background:var(--s2);border-radius:99px;overflow:hidden}.bar{height:100%;background:var(--a);width:0%;transition:.2s}.floating{display:flex;justify-content:center;margin-top:8px}.pip{font-size:12px}.actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:18px 0}.task{display:flex;gap:7px}.task input,.select{width:100%;padding:11px;border:1px solid var(--b);border-radius:11px;background:var(--s);color:var(--t)}.dots{display:flex;justify-content:center;gap:7px;margin:14px}.dot{width:9px;height:9px;border-radius:50%;background:var(--b)}.dot.done{background:var(--a)}.dot.cur{outline:3px solid var(--as)}.title{font-weight:680;margin-bottom:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:var(--s2);border-radius:13px;padding:13px;text-align:center}.num{font-size:24px;font-weight:680}.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.cell{aspect-ratio:1;border-radius:6px;background:var(--s2);display:grid;place-items:center;font-size:10px;color:var(--m)}.l1{background:color-mix(in srgb,var(--a) 25%,white)}.l2{background:color-mix(in srgb,var(--a) 50%,white)}.l3{background:var(--a);color:white}.calhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.calwrap{overflow:auto}.cal{min-width:650px;display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid var(--b);border-left:1px solid var(--b)}.cal>div{border-right:1px solid var(--b);border-bottom:1px solid var(--b)}.dow{text-align:center;padding:8px;color:var(--m);font-size:11px}.day{min-height:88px;padding:7px}.other{background:var(--s2);color:var(--m)}.today{box-shadow:inset 0 0 0 2px var(--a)}.pill{display:block;margin-top:5px;padding:4px;border-radius:7px;background:var(--as);color:var(--a);font-size:10px}.chart{height:170px;display:flex;align-items:flex-end;gap:8px}.col{flex:1;text-align:center}.barc{width:70%;max-width:30px;margin:auto;background:var(--a);border-radius:6px 6px 2px 2px;min-height:2px}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.swatches{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}.sw{width:34px;height:34px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px var(--b);cursor:pointer}.history{display:grid;gap:8px}.item{border:1px solid var(--b);border-radius:12px;padding:11px;display:flex;justify-content:space-between;gap:8px}.empty{text-align:center;padding:28px;color:var(--m)}@media(max-width:780px){.grid{grid-template-columns:1fr}.head{align-items:flex-start}.nav{width:100%}.nav .btn{flex:1}.time{font-size:62px}.formgrid{grid-template-columns:1fr}}
 body.dark{--bg:#202124;--s:#292a2d;--s2:#303134;--t:#f1f3f4;--m:#bdc1c6;--b:#4a4b4f}
 
 body.dark{--bg:#202124;--s:#292a2d;--s2:#35363a;--t:#f1f3f4;--m:#bdc1c6;--b:#4a4b50}
@@ -9,18 +9,21 @@ body.dark .calcell{background:#292a2d}
 .dark-toggle{min-width:110px}
 
 .gpill{display:block;margin-top:4px;padding:4px 6px;border-radius:7px;background:var(--eventbg,var(--as));color:var(--eventfg,var(--a));font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid var(--eventfg,var(--a))}.amcday{display:inline-flex;align-items:center;justify-content:center;margin-left:5px;font-size:13px}.amcday[title]{cursor:help}
+.day{cursor:pointer;transition:background .12s ease}.day:hover{background:var(--s2)}.day.selected{box-shadow:inset 0 0 0 2px var(--a);background:var(--as)}.day-details{margin-top:15px;padding:15px;border:1px solid var(--b);border-radius:14px;background:var(--s2)}.day-details .detail-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.detail-list{display:grid;gap:7px}.detail-row{padding:9px 10px;border-radius:10px;background:var(--s);border:1px solid var(--b)}.detail-row b{display:block}.detail-row .muted{margin-top:2px}.day-details .empty{padding:10px 0}
 @media(max-width:700px){.gpill{font-size:10px}.cal{min-width:620px}}
 </style><script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://apis.google.com/js/api.js" async defer></script></head><body><main class="app">
 <header class="head"><div class="brand"><div class="logo">P</div><div><h1>Pompoms</h1><div class="muted" id="date"></div></div></div><button class="btn dark-toggle" id="darkToggle">🌙 Dark mode</button><nav class="nav"><button class="btn active" data-p="timer">Timer</button><button class="btn" data-p="calendar">Calendar</button><button class="btn" data-p="stats">Stats</button><button class="btn" data-p="settings">Settings</button></nav></header>
 
-<section id="timer" class="page on"><div class="grid"><div class="card timer"><div class="mode" id="mode">Focus</div><div class="time" id="time">25:00</div><div class="progress"><div class="bar" id="tb"></div></div><div class="muted" id="sess">Session 1 of 4</div><div class="dots" id="dots"></div><div class="actions"><button class="btn primary" id="start">Start</button><button class="btn" id="reset">Reset</button><button class="btn" id="skip">Skip</button></div><div class="task"><input id="task" placeholder="What are you working on?"><button class="btn" id="saveTask">Save</button></div></div>
+<section id="timer" class="page on"><div class="grid"><div class="card timer"><div class="mode" id="mode">Focus</div><div class="time" id="time">25:00</div><div class="progress"><div class="bar" id="tb"></div></div><div class="muted" id="sess">Session 1 of 4</div><div class="dots" id="dots"></div><div class="actions"><button class="btn primary" id="start">Start</button><button class="btn" id="reset">Reset</button><button class="btn" id="skip">Skip</button></div><div class="floating"><button class="btn pip" id="pipTimer">↗ Pop out timer</button></div><div class="task"><input id="task" placeholder="What are you working on?"><button class="btn" id="saveTask">Save</button></div></div>
 <div class="card"><div class="title">Today</div><div class="stats"><div class="stat"><div class="num" id="ts">0</div><div class="muted">sessions</div></div><div class="stat"><div class="num" id="tm">0</div><div class="muted">focus min</div></div><div class="stat"><div class="num" id="st">0</div><div class="muted">day streak</div></div></div><div style="margin-top:20px" class="title">Daily goal</div><div class="muted"><b id="gd">0</b> / <b id="goal">8</b> sessions</div><div class="progress" style="margin-top:7px"><div class="bar" id="gb"></div></div><div style="margin-top:20px" class="title">Recent consistency</div><div class="heat" id="heat"></div></div></div><div class="card" style="margin-top:15px"><div class="title">Current task</div><div class="muted" id="ct">No task selected.</div></div></section>
 
 <section id="calendar" class="page"><div class="card"><div class="calhead"><button class="btn" id="prev">‹</button><b id="month"></b><button class="btn" id="next">›</button></div>
 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><button class="btn" id="refreshGoogleCal">↻ Refresh Google Calendar</button><span class="muted" id="calendarStatus">🍅 AMC study days are shown automatically. Connect Google Calendar to show only AMC-related events.</span></div>
 <div class="muted" style="margin-bottom:10px">🍅 🍅 AMC study days &nbsp; • &nbsp; 📅 AMC Google Calendar events</div>
-<div class="calwrap"><div class="cal" id="cal"></div></div></div></section>
+<div class="calwrap"><div class="cal" id="cal"></div></div>
+<div id="dayDetails" class="day-details" aria-live="polite"><div class="title">Select a day</div><div class="muted">Click any date to see your AMC study tasks, Google Calendar events, and Pomodoro sessions.</div></div>
+</div></section>
 
 <section id="stats" class="page"><div class="grid"><div class="card"><div class="title">Focus this week</div><div class="chart" id="chart"></div><div class="muted" id="wt"></div></div><div class="card"><div class="title">Your numbers</div><div class="stats"><div class="stat"><div class="num" id="all">0</div><div class="muted">sessions</div></div><div class="stat"><div class="num" id="hrs">0</div><div class="muted">focus hours</div></div><div class="stat"><div class="num" id="best">0</div><div class="muted">best streak</div></div></div><p class="muted" id="cons"></p></div></div><div class="card" style="margin-top:15px"><div class="title">Recent sessions</div><div class="history" id="history"></div></div></section>
 
@@ -168,7 +171,32 @@ function disconnectGoogle(){
   if(window.gapi?.client)gapi.client.setToken('');
   s.googleConnected=false;s.googleEvents=[];save();googleTokenClient=null;googleReady=false;calendar();googleStatus('Disconnected. Your Client ID is saved; click Connect to reconnect.');
 }
-function render(){theme();updateAlarmUI();$('date').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});let t=rs(today()),m=t.reduce((a,b)=>a+b.min,0);$('ts').textContent=t.length;$('tm').textContent=m;$('st').textContent=streak();$('gd').textContent=t.length;$('goal').textContent=s.goal;$('gb').style.width=Math.min(100,t.length/s.goal*100)+'%';$('ct').textContent=s.task||'No task selected.';$('task').value=s.task;let max=s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long,tot=max*60;$('time').textContent=String(Math.floor(s.rem/60)).padStart(2,'0')+':'+String(s.rem%60).padStart(2,'0');$('mode').textContent=s.mode==='focus'?'Focus':s.mode==='short'?'Short break':'Long break';$('sess').textContent=s.mode==='focus'?`Session ${s.round} of 4`:'Recharge before the next focus session';$('start').textContent=s.run?'Pause':'Start';$('tb').style.width=(100*(1-s.rem/tot))+'%';$('dots').innerHTML=[1,2,3,4].map(i=>`<i class="dot ${i<s.round?'done':''} ${i===s.round?'cur':''}"></i>`).join('');heat();calendar();stats();['focus','short','long'].forEach(id=>$(id).value=s[id]);$('goalset').value=s.goal}
+let pipWin=null, pipEl=null;
+function updatePiPTimer(){
+  if(!pipWin||pipWin.closed||!pipEl)return;
+  const mm=String(Math.floor(s.rem/60)).padStart(2,'0'),ss=String(s.rem%60).padStart(2,'0');
+  pipEl.time.textContent=mm+':'+ss; pipEl.mode.textContent=(s.mode==='focus'?'Focus':s.mode==='short'?'Short break':'Long break')+(s.run?' • running':' • paused');
+  pipEl.bar.style.width=(100*(1-s.rem/((s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long)*60)))+'%';
+  pipWin.document.title=mm+':'+ss+' • Pompoms';
+}
+async function openPiPTimer(){
+  if(pipWin&&!pipWin.closed){pipWin.focus();return}
+  if(window.documentPictureInPicture){
+    try{
+      pipWin=await window.documentPictureInPicture.requestWindow({width:300,height:190});
+      pipWin.document.head.innerHTML='<title>Pompoms Timer</title><style>body{margin:0;padding:22px;background:#f8fafd;color:#202124;font:14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;text-align:center}#mode{color:#5f6368;margin-bottom:8px}#time{font-size:54px;font-weight:700;letter-spacing:-3px;font-variant-numeric:tabular-nums}#bar{height:7px;background:#e8eaed;border-radius:99px;margin-top:16px;overflow:hidden}#fill{height:100%;background:#1a73e8;width:0%}#hint{margin-top:10px;color:#5f6368;font-size:11px}</style>';
+      pipWin.document.body.innerHTML='<div id="mode">Focus • paused</div><div id="time">25:00</div><div id="bar"><div id="fill"></div></div><div id="hint">Pompoms</div>';
+      pipEl={mode:pipWin.document.getElementById('mode'),time:pipWin.document.getElementById('time'),bar:pipWin.document.getElementById('fill')};
+      pipWin.addEventListener('pagehide',()=>{pipWin=null;pipEl=null});
+      updatePiPTimer();return;
+    }catch(e){}
+  }
+  pipWin=window.open('','PompomsTimer','width=300,height=190,resizable=yes,alwaysRaised=yes');
+  if(!pipWin)return;
+  pipWin.document.write('<title>Pompoms Timer</title><body style="margin:0;padding:22px;background:#f8fafd;color:#202124;font:14px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;text-align:center"><div id="mode">Focus</div><div id="time" style="font-size:54px;font-weight:700">25:00</div><div style="height:7px;background:#e8eaed;border-radius:99px;margin-top:16px"><div id="fill" style="height:100%;background:#1a73e8;width:0%"></div></div><div style="margin-top:10px;color:#5f6368;font-size:11px">Pompoms</div></body>');
+  pipEl={mode:pipWin.document.getElementById('mode'),time:pipWin.document.getElementById('time'),bar:pipWin.document.getElementById('fill')};updatePiPTimer();
+}
+function render(){theme();updateAlarmUI();$('date').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});let t=rs(today()),m=t.reduce((a,b)=>a+b.min,0);$('ts').textContent=t.length;$('tm').textContent=m;$('st').textContent=streak();$('gd').textContent=t.length;$('goal').textContent=s.goal;$('gb').style.width=Math.min(100,t.length/s.goal*100)+'%';$('ct').textContent=s.task||'No task selected.';$('task').value=s.task;let max=s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long,tot=max*60;$('time').textContent=String(Math.floor(s.rem/60)).padStart(2,'0')+':'+String(s.rem%60).padStart(2,'0');$('mode').textContent=s.mode==='focus'?'Focus':s.mode==='short'?'Short break':'Long break';$('sess').textContent=s.mode==='focus'?`Session ${s.round} of 4`:'Recharge before the next focus session';$('start').textContent=s.run?'Pause':'Start';$('tb').style.width=(100*(1-s.rem/tot))+'%';updatePiPTimer();document.title=String(Math.floor(s.rem/60)).padStart(2,'0')+':'+String(s.rem%60).padStart(2,'0')+' • Pompoms';$('dots').innerHTML=[1,2,3,4].map(i=>`<i class="dot ${i<s.round?'done':''} ${i===s.round?'cur':''}"></i>`).join('');heat();calendar();stats();['focus','short','long'].forEach(id=>$(id).value=s[id]);$('goalset').value=s.goal}
 function heat(){let h=$('heat');h.innerHTML='';let d=new Date();d.setDate(d.getDate()-27);for(let i=0;i<28;i++){let n=rs(key(d)).length,e=document.createElement('div');e.className='cell '+(n>=4?'l3':n>=2?'l2':n?'l1':'');e.textContent=n||'';e.title=key(d)+': '+n;h.appendChild(e);d.setDate(d.getDate()+1)}}
 
 let audioCtx=null;
@@ -207,7 +235,7 @@ function nextMode(){
   s.run=false;clearInterval(timer);save();cycleAlarm(finished);render()
 }
 function tick(){if(!s.run)return;s.rem--;if(s.rem<=0)nextMode();else render()}
-$('start').onclick=()=>{s.run=!s.run;clearInterval(timer);if(s.run)timer=setInterval(tick,1000);save();render()};$('reset').onclick=()=>{s.run=false;clearInterval(timer);s.rem=(s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long)*60;save();render()};$('skip').onclick=nextMode;$('saveTask').onclick=()=>{s.task=$('task').value.trim();save();render()};
+$('start').onclick=()=>{s.run=!s.run;clearInterval(timer);if(s.run)timer=setInterval(tick,1000);save();render()};$('pipTimer').onclick=openPiPTimer;$('reset').onclick=()=>{s.run=false;clearInterval(timer);s.rem=(s.mode==='focus'?s.focus:s.mode==='short'?s.short:s.long)*60;save();render()};$('skip').onclick=nextMode;$('saveTask').onclick=()=>{s.task=$('task').value.trim();save();render()};
 document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-p]').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));$(b.dataset.p).classList.add('on');render()});
 ['focus','short','long'].forEach(id=>$(id).onchange=e=>{s[id]=+e.target.value;if(s.mode===id)s.rem=s[id]*60;save();render()});$('goalset').onchange=e=>{s.goal=+e.target.value;save();render()};
 const AMC_START='2026-10-12',AMC_END='2027-02-28';
@@ -222,6 +250,25 @@ function eventDayRange(x){
   return [sk,ek];
 }
 function eventOnDay(x,k){const [sk,ek]=eventDayRange(x);return k>=sk&&k<=ek}
+let selectedDay=localStorage.getItem('pompomsSelectedDay')||today();
+function renderDayDetails(k){
+  selectedDay=k;localStorage.setItem('pompomsSelectedDay',k);
+  const box=$('dayDetails');if(!box)return;
+  const d=new Date(k+'T00:00:00');
+  const title=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  const sessions=rs(k);
+  const events=(s.googleEvents||[]).filter(x=>eventOnDay(x,k));
+  const rows=[];
+  if(isAmcStudyDay(k))rows.push(`<div class="detail-row"><b>🍅 AMC study day</b><div class="muted">Your AMC study plan runs on this date.</div></div>`);
+  events.forEach(x=>{
+    const tm=x.allDay?'All day':new Date(x.start).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+    const bg=x.backgroundColor||'';const fg=x.foregroundColor||'';
+    const style=bg?` style="--eventbg:${esc(bg)};--eventfg:${esc(fg||'#202124')}"`:'';
+    rows.push(`<div class="detail-row"${style}><b>📅 ${esc(x.title)}</b><div class="muted">${tm}${x.description?' · '+esc(x.description):''}</div></div>`);
+  });
+  sessions.forEach(x=>rows.push(`<div class="detail-row"><b>🌱 Pompoms focus session</b><div class="muted">${x.min} minutes · ${esc(x.task||'Focus session')}</div></div>`));
+  box.innerHTML=`<div class="detail-head"><div><div class="title" style="margin-bottom:3px">${esc(title)}</div><div class="muted">${rows.length?rows.length+' item'+(rows.length===1?'':'s'):'Nothing scheduled yet.'}</div></div></div>${rows.length?`<div class="detail-list">${rows.join('')}</div>`:`<div class="empty">No AMC task or event is showing for this day.</div>`}`;
+}
 function calendar(){
   let y=month.getFullYear(),m=month.getMonth(),g=$('cal');
   $('month').textContent=month.toLocaleDateString(undefined,{month:'long',year:'numeric'});
@@ -230,11 +277,12 @@ function calendar(){
   let d=new Date(y,m,1); d.setDate(1-d.getDay());
   for(let i=0;i<42;i++){
     let k=key(d),a=rs(k),e=document.createElement('div');
-    e.className='day '+(d.getMonth()!=m?'other ':'')+(k===today()?'today':'');
+    e.className='day '+(d.getMonth()!=m?'other ':'')+(k===today()?'today ':'')+(k===selectedDay?'selected':'');
+    e.setAttribute('role','button');e.setAttribute('tabindex','0');e.setAttribute('aria-label','View schedule for '+k);
     const ge=events.filter(x=>eventOnDay(x,k));
     let bits=`<b>${d.getDate()}</b>`;
     if(isAmcStudyDay(k))bits+=`<span class="amcday" title="AMC study day">🍅</span>`;
-    if(a.length)bits+=`<span class="pill">🍅 ${a.length} focus · ${a.reduce((x,y)=>x+y.min,0)}m</span>`;
+    if(a.length)bits+=`<span class="pill">🌱 ${a.length} focus · ${a.reduce((x,y)=>x+y.min,0)}m</span>`;
     ge.slice(0,6).forEach(x=>{
       const tm=x.allDay?'All day':new Date(x.start).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
       const bg=x.backgroundColor||'';const fg=x.foregroundColor||'';
@@ -242,8 +290,12 @@ function calendar(){
       bits+=`<span class="gpill"${style} title="${esc(x.title)}">📅 ${tm} · ${esc(x.title)}</span>`;
     });
     if(ge.length>6)bits+=`<span class="muted" style="display:block;margin-top:4px">+${ge.length-6} more</span>`;
-    e.innerHTML=bits; g.appendChild(e); d.setDate(d.getDate()+1);
+    e.innerHTML=bits;
+    e.onclick=()=>{document.querySelectorAll('.day.selected').forEach(x=>x.classList.remove('selected'));e.classList.add('selected');renderDayDetails(k)};
+    e.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();e.click()}};
+    g.appendChild(e); d.setDate(d.getDate()+1);
   }
+  renderDayDetails(selectedDay);
   const cs=$('calendarStatus');
   if(cs && !s.googleConnected)cs.textContent='Connect Google Calendar in Settings to show your schedule here. 🍅 marks your AMC study days (12 Oct 2026–28 Feb 2027).';
 }
