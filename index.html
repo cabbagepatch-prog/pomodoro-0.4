@@ -106,7 +106,17 @@ async function connectGoogle(){
   if(!/\.apps\.googleusercontent\.com$/.test(id)){googleStatus('That does not look like a Google Web Client ID. It should end in .apps.googleusercontent.com');return}
   googleStatus('Connecting to Google Calendar…');
   if(!(await initGoogle()))return;
-  try{await authGoogle('consent');await loadGoogleCalendars();await fetchGoogleEvents();googleStatus(`Connected. Showing ${s.googleCalendarName||'your selected AMC calendar'} in the Calendar tab.`)}catch(e){googleStatus('Google connection failed. Check the Client ID, Authorized JavaScript origin, Calendar API, and test-user settings.')}
+  try{
+    await authGoogle('consent');
+    await loadGoogleCalendars();
+    await fetchGoogleEvents();
+    googleStatus(`Connected. Showing ${s.googleCalendarName||'your selected AMC calendar'} in the Calendar tab.`);
+  }catch(e){
+    const code=e?.error||e?.result?.error?.status||e?.result?.error?.message||e?.details||e?.message||'Unknown Google error';
+    console.error('Pompoms Google Calendar error:',e);
+    googleStatus(`Google connection failed: ${String(code).slice(0,260)}. Open browser console for details.`);
+    s.googleConnected=false;save();
+  }
 }
 async function loadGoogleCalendars(){
   const res=await gapi.client.calendar.calendarList.list({maxResults:250,showDeleted:false,showHidden:false});
