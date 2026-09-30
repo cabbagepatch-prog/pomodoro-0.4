@@ -58,7 +58,7 @@ function theme(){
 }
 
 const GOOGLE_DISCOVERY='https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const GOOGLE_READ_SCOPES='https://www.googleapis.com/auth/calendar.events.readonly https://www.googleapis.com/auth/calendar.calendarlist.readonly';
+const GOOGLE_READ_SCOPES='https://www.googleapis.com/auth/calendar.readonly';
 const GOOGLE_WRITE_SCOPE='https://www.googleapis.com/auth/calendar.events';
 const GOOGLE_ORIGIN='https://cabbagepatch-prog.github.io';
 let googleTokenClient=null, googleReady=false, gapiReady=false, gapiLoading=null;
@@ -90,7 +90,7 @@ async function initGoogle(){
   const id=getClientId();
   if(!id){googleStatus('Enter your Google OAuth Web Client ID first.');return false}
   try{await waitForGoogleLibs();await loadGapi();
-    googleTokenClient=google.accounts.oauth2.initTokenClient({client_id:id,scope:GOOGLE_READ_SCOPES,callback:()=>{}});
+    googleTokenClient=google.accounts.oauth2.initTokenClient({client_id:id,scope:GOOGLE_READ_SCOPES,include_granted_scopes:true,callback:()=>{}});
     googleReady=true;return true;
   }catch(e){googleReady=false;googleStatus('Google services could not load. Refresh the page and try again.');return false}
 }
@@ -98,7 +98,7 @@ function authGoogle(promptMode=''){
   if(!googleTokenClient) return Promise.reject(new Error('Google authorization is not initialized.'));
   return new Promise((resolve,reject)=>{
     googleTokenClient.callback=(resp)=>{if(resp?.error){reject(resp);return}try{gapi.client.setToken(resp);s.googleConnected=true;save();resolve(resp)}catch(e){reject(e)}};
-    googleTokenClient.requestAccessToken({prompt:promptMode});
+    googleTokenClient.requestAccessToken({prompt:promptMode,include_granted_scopes:true});
   });
 }
 async function connectGoogle(){
@@ -107,7 +107,7 @@ async function connectGoogle(){
   if(!/\.apps\.googleusercontent\.com$/.test(id)){googleStatus('That does not look like a Google Web Client ID. It should end in .apps.googleusercontent.com');return}
   googleStatus('Connecting to Google Calendar…');
   if(!(await initGoogle()))return;
-  try{await authGoogle('consent');await loadGoogleCalendars();await fetchGoogleEvents();googleStatus(`Connected. Showing ${s.googleCalendarName||'your selected AMC calendar'} in the Calendar tab.`)}catch(e){googleStatus('Google connection failed: '+(e?.error||e?.result?.error?.message||e?.result?.error?.errors?.[0]?.reason||'PERMISSION_DENIED')+'. See browser console for details.')}
+  try{await authGoogle('consent');await loadGoogleCalendars();await fetchGoogleEvents();googleStatus(`Connected. Showing ${s.googleCalendarName||'your selected AMC calendar'} in the Calendar tab.`)}catch(e){googleStatus('Google connection failed: '+(e?.result?.error?.message||e?.result?.error?.errors?.[0]?.reason||e?.error_description||e?.error||'Unknown Google error')+'.')}
 }
 async function loadGoogleCalendars(){
   const res=await gapi.client.calendar.calendarList.list({maxResults:250,showDeleted:false,showHidden:false});
