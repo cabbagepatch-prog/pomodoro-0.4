@@ -37,7 +37,7 @@ body.dark .calcell{background:#292a2d}
 <div style="margin-top:18px" class="title">Google Calendar</div>
 <label class="muted">Google OAuth Web Client ID
 <input class="task input" id="googleClientId" placeholder="123456789012-xxxxx.apps.googleusercontent.com" autocomplete="off" spellcheck="false" style="margin-top:6px"></label>
-<div class="muted" style="margin-top:7px">For this app, add <b>https://cabbagepatch-prog.github.io</b> as the Authorized JavaScript origin in Google Cloud. No client secret is used in a browser app.</div><div class="muted" style="margin-top:7px">Only events with AMC-related titles/descriptions (including AMC, Australian Medicine, Core Content, Question Bank, Mock Exams and Review/Error Log) are shown. Your other Google Calendar events stay out of Pompoms.</div>
+<div class="muted" style="margin-top:7px">For this app, add <b>https://cabbagepatch-prog.github.io</b> as the Authorized JavaScript origin in Google Cloud. No client secret is used in a browser app.</div><div class="muted" style="margin-top:7px">Choose your AMC Google Calendar below. Pompoms will show <b>every event from that calendar</b>, exactly as scheduled in Google Calendar. Other calendars will not be displayed.</div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px"><label for="amcCalendarSelect"><b>AMC calendar:</b></label><select id="amcCalendarSelect" class="input" style="min-width:260px"><option>Connect Google Calendar first</option></select></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px">
 <button class="btn primary" id="googleConnect">Connect Google Calendar</button>
 <button class="btn" id="googleSync">Sync completed sessions</button>
@@ -48,7 +48,7 @@ body.dark .calcell{background:#292a2d}
 <div style="margin-top:20px" class="title">Data</div><button class="btn" id="export">Export history</button> <button class="btn" id="clear">Clear data</button></div></section>
 </main>
 <script>
-(()=>{const $=id=>document.getElementById(id),C=['#1a73e8','#188038','#9334e6','#d93025','#e37400','#00897b','#c2185b','#5f6368'];let s=JSON.parse(localStorage.getItem('pompomsV1') || localStorage.getItem('focusV3')||'null')||{focus:25,short:5,long:15,goal:8,a:'#1a73e8',theme:'system',mode:'focus',rem:1500,run:false,round:1,task:'',r:[],sound:true,dark:false,googleClientId:'',googleConnected:false,googleEvents:[]},timer=null,month=new Date();month.setDate(1);
+(()=>{const $=id=>document.getElementById(id),C=['#1a73e8','#188038','#9334e6','#d93025','#e37400','#00897b','#c2185b','#5f6368'];let s=JSON.parse(localStorage.getItem('pompomsV1') || localStorage.getItem('focusV3')||'null')||{focus:25,short:5,long:15,goal:8,a:'#1a73e8',theme:'system',mode:'focus',rem:1500,run:false,round:1,task:'',r:[],sound:true,dark:false,googleClientId:'',googleConnected:false,googleEvents:[],googleCalendarId:'',googleCalendarName:'',googleCalendars:[]},timer=null,month=new Date();month.setDate(1);
 const key=d=>{d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},today=()=>key(new Date()),rs=k=>s.r.filter(x=>x.date===k),save=()=>localStorage.setItem('pompomsV1',JSON.stringify(s));
 function streak(){let n=0,d=new Date();while(rs(key(d)).length){n++;d.setDate(d.getDate()-1)}return n}function best(){let z=[...new Set(s.r.map(x=>x.date))].sort(),b=0,n=0,p;z.forEach(x=>{let d=new Date(x+'T12:00');if(p&&(d-p)/864e5===1)n++;else n=1;b=Math.max(b,n);p=d});return b}
 function theme(){
@@ -106,32 +106,59 @@ async function connectGoogle(){
   if(!/\.apps\.googleusercontent\.com$/.test(id)){googleStatus('That does not look like a Google Web Client ID. It should end in .apps.googleusercontent.com');return}
   googleStatus('Connecting to Google Calendar…');
   if(!(await initGoogle()))return;
-  try{await authGoogle('consent');await fetchGoogleEvents();googleStatus('Connected. Your Google Calendar is now shown in the Calendar tab.')}catch(e){googleStatus('Google connection failed. Check the Client ID, Authorized JavaScript origin, Calendar API, and test-user settings.')}
+  try{await authGoogle('consent');await loadGoogleCalendars();await fetchGoogleEvents();googleStatus(`Connected. Showing ${s.googleCalendarName||'your selected AMC calendar'} in the Calendar tab.`)}catch(e){googleStatus('Google connection failed. Check the Client ID, Authorized JavaScript origin, Calendar API, and test-user settings.')}
 }
-const AMC_EVENT_TERMS=['AMC','Australian Medicine','Question Bank','Core Content','Mock Exams','Review/Error Log','Error Log','AMC1','AMC CAT'];
-function isAmcGoogleEvent(x){const hay=String([x.summary||'',x.description||'',x.location||''].join(' ')).toLowerCase();return AMC_EVENT_TERMS.some(t=>hay.includes(t.toLowerCase()))}
+async function loadGoogleCalendars(){
+  const res=await gapi.client.calendar.calendarList.list({maxResults:250,showDeleted:false,showHidden:false});
+  const calendars=res.result.items||[];
+  s.googleCalendars=calendars.map(c=>({id:c.id,name:c.summary||c.id,description:c.description||'',primary:!!c.primary,backgroundColor:c.backgroundColor||'',foregroundColor:c.foregroundColor||''}));
+  if(!s.googleCalendarId){
+    const amc=s.googleCalendars.find(c=>/\bamc\b/i.test(c.name)||/australian medicine/i.test(c.name));
+    const primary=s.googleCalendars.find(c=>c.primary);
+    const chosen=amc||primary||s.googleCalendars[0];
+    if(chosen){s.googleCalendarId=chosen.id;s.googleCalendarName=chosen.name;}
+  } else {
+    const chosen=s.googleCalendars.find(c=>c.id===s.googleCalendarId);
+    if(chosen)s.googleCalendarName=chosen.name;
+  }
+  renderGoogleCalendarSelect();
+  save();
+}
+function renderGoogleCalendarSelect(){
+  const el=$('amcCalendarSelect');if(!el)return;
+  if(!s.googleCalendars?.length){el.innerHTML='<option value="">No calendars found</option>';return}
+  el.innerHTML=s.googleCalendars.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}${c.primary?' (Primary)':''}</option>`).join('');
+  el.value=s.googleCalendarId||s.googleCalendars[0].id;
+}
+async function selectGoogleCalendar(id){
+  const c=(s.googleCalendars||[]).find(x=>x.id===id);if(!c)return;
+  s.googleCalendarId=c.id;s.googleCalendarName=c.name;save();
+  googleStatus(`Loading ${c.name}…`);
+  await fetchGoogleEvents();
+}
 async function fetchGoogleEvents(){
   if(!googleReady)await initGoogle();
   if(!gapi.client.getToken()){await authGoogle('')}
+  if(!s.googleCalendarId)await loadGoogleCalendars();
   try{
     const start=new Date(month.getFullYear(),month.getMonth(),1);
     const end=new Date(month.getFullYear(),month.getMonth()+1,1);
     let pageToken='',items=[];
     do{
-      const res=await gapi.client.calendar.events.list({calendarId:'primary',timeMin:start.toISOString(),timeMax:end.toISOString(),singleEvents:true,orderBy:'startTime',maxResults:250,showDeleted:false,pageToken:pageToken||undefined});
+      const res=await gapi.client.calendar.events.list({calendarId:s.googleCalendarId||'primary',timeMin:start.toISOString(),timeMax:end.toISOString(),singleEvents:true,orderBy:'startTime',maxResults:250,showDeleted:false,pageToken:pageToken||undefined});
       items=items.concat(res.result.items||[]);
       pageToken=res.result.nextPageToken||'';
     }while(pageToken);
     let colors={};
     try{const cr=await gapi.client.calendar.colors.get({});colors=cr.result.event||{};}catch(colorErr){}
-    const amcItems=items.filter(isAmcGoogleEvent);
-    s.googleEvents=amcItems.map(x=>{
+    const calendarItems=items;
+    s.googleEvents=calendarItems.map(x=>{
       const c=(x.colorId&&colors[x.colorId])||{};
       return {id:x.id,title:x.summary||'(No title)',start:x.start?.dateTime||x.start?.date,end:x.end?.dateTime||x.end?.date,allDay:!!x.start?.date,colorId:x.colorId||'',backgroundColor:c.background||'',foregroundColor:c.foreground||''};
     });
     s.googleConnected=true;save();calendar();
-    const cs=$('calendarStatus');if(cs)cs.textContent=`Showing ${s.googleEvents.length} AMC Google Calendar event${s.googleEvents.length===1?'':'s'} this month. Full Google Calendar is filtered out.`;
-    googleStatus('Connected. AMC Google Calendar events are shown in the Calendar tab.');
+    const cs=$('calendarStatus');if(cs)cs.textContent=`Showing ${s.googleEvents.length} event${s.googleEvents.length===1?'':'s'} from ${s.googleCalendarName||'your AMC calendar'} this month.`;
+    googleStatus(`Connected. Showing ${s.googleCalendarName||'your selected AMC calendar'} in the Calendar tab.`);
     return true;
   }catch(e){
     console.error(e);s.googleConnected=false;save();
@@ -169,7 +196,7 @@ function disconnectGoogle(){
   const tok=window.gapi?.client?.getToken?.();
   if(tok?.access_token && window.google?.accounts?.oauth2)google.accounts.oauth2.revoke(tok.access_token,()=>{});
   if(window.gapi?.client)gapi.client.setToken('');
-  s.googleConnected=false;s.googleEvents=[];save();googleTokenClient=null;googleReady=false;calendar();googleStatus('Disconnected. Your Client ID is saved; click Connect to reconnect.');
+  s.googleConnected=false;s.googleEvents=[];s.googleCalendars=[];s.googleCalendarId='';s.googleCalendarName='';save();googleTokenClient=null;googleReady=false;calendar();googleStatus('Disconnected. Your Client ID is saved; click Connect to reconnect.');
 }
 let pipWin=null, pipEl=null;
 function updatePiPTimer(){
@@ -312,6 +339,7 @@ $('googleSync').onclick=syncGoogle;
 $('googleDisconnect').onclick=disconnectGoogle;
 $('googleClientId').value=getClientId();
 $('googleClientId').onchange=()=>{setClientId();googleStatus(getClientId()?'Client ID saved. Click Connect Google Calendar.':'Enter your Google OAuth Web Client ID.')};
+$('amcCalendarSelect').onchange=e=>selectGoogleCalendar(e.target.value);
 setTimeout(()=>{waitForGoogleLibs(5000).then(()=>loadGapi()).catch(()=>{})},200);
 $('soundToggle').onclick=()=>{s.sound=!s.sound;save();render();updateAlarmUI()};
 $('testSound').onclick=()=>tone('focus');
@@ -321,7 +349,8 @@ $('notifyBtn').onclick=async()=>{
 };
 function updateAlarmUI(){
   const d=$('darkToggle'); if(d)d.textContent=s.dark?'☀️ Light mode':'🌙 Dark mode';
-  if($('googleStatus')) $('googleStatus').textContent=s.googleConnected?'Connected to Google Calendar.':'Not connected. Enter your Google OAuth Client ID to show only AMC-related events.';
+  if($('googleStatus')) $('googleStatus').textContent=s.googleConnected?`Connected to ${s.googleCalendarName||'Google Calendar'}.`:'Not connected. Enter your Google OAuth Client ID to choose your AMC calendar.';
+renderGoogleCalendarSelect();
   $('soundToggle').textContent=s.sound?'🔔 Sound: On':'🔕 Sound: Off';
   if('Notification'in window){
     $('notifyBtn').textContent=Notification.permission==='granted'?'Notifications enabled':'Enable notifications';
